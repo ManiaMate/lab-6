@@ -102,7 +102,7 @@ public class PathFinding : MonoBehaviour
             pipTilemap.SetTile(new Vector3Int(current.position.x, current.position.y, 0), pipTile);
 
             previousNode = current;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
             if (current == endNode)
             {
@@ -187,9 +187,24 @@ public class PathFinding : MonoBehaviour
             endNode = allNodesGoThrough[Random.Range(0, allNodesGoThrough.Count)];
         }
 
-
         pipTilemap.SetTile(new Vector3Int(startNode.position.x, startNode.position.y, 0), pipTile);
         pipTilemap.SetTile(new Vector3Int(endNode.position.x, endNode.position.y, 0), finishTile);
+
+        int obstacleCount = 0;
+        while (obstacleCount < gridSize.x + 5)
+        {
+            Node randomTile = allNodesGoThrough[Random.Range(0, allNodesGoThrough.Count)];
+            if (randomTile == startNode || randomTile == endNode)
+            {
+                continue;
+            }
+            else
+            {
+                tilemap.SetTile(new Vector3Int(randomTile.position.x, randomTile.position.y, 0), obstacleTile);
+                randomTile.canGoThrough = false;
+                obstacleCount += 1;
+            }
+        }
     }
 
     void CreateInitialGrid()
